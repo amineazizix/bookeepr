@@ -4,14 +4,18 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
+COPY tsconfig.json tsconfig.json
 
 RUN npm install -g pnpm
 
 RUN pnpm install
 
-COPY . . 
+COPY apps/payments apps/payments
+COPY libs libs
 
-RUN pnpm run build 
+RUN cd apps/payments && pnpm install
+
+RUN pnpm run build payments
 
 FROM node:alpine as production
 
